@@ -15,8 +15,7 @@ import {
   VirtualizedList
 } from 'react-native'
 
-import ImageItem from './components/ImageItem/ImageItem'
-import ImageDefaultHeader from './components/ImageDefaultHeader'
+import ImageItem from './components/ImageItem'
 
 import useAnimatedComponents from './hooks/useAnimatedComponents'
 import useImageIndexChange from './hooks/useImageIndexChange'
@@ -33,11 +32,9 @@ type Props = {
   swipeToCloseEnabled?: boolean
   doubleTapToZoomEnabled?: boolean
   delayLongPress?: number
-  HeaderComponent?: ComponentType<{ imageIndex: number }>
-  FooterComponent?: ComponentType<{ imageIndex: number }>
+  HeaderComponent: ComponentType<{ imageIndex: number }>
 }
 
-const DEFAULT_ANIMATION_TYPE = 'fade'
 const DEFAULT_BG_COLOR = '#000'
 const DEFAULT_DELAY_LONG_PRESS = 800
 const SCREEN = Dimensions.get('screen')
@@ -53,17 +50,12 @@ function ImageViewing ({
   swipeToCloseEnabled,
   doubleTapToZoomEnabled,
   delayLongPress = DEFAULT_DELAY_LONG_PRESS,
-  HeaderComponent,
-  FooterComponent
+  HeaderComponent
 }: Props) {
   const imageList = React.createRef<VirtualizedList<ImageSource>>()
   const [opacity, onRequestCloseEnhanced] = useRequestClose(onRequestClose)
   const [currentImageIndex, onScroll] = useImageIndexChange(imageIndex, SCREEN)
-  const [
-    headerTransform,
-    footerTransform,
-    toggleBarsVisible
-  ] = useAnimatedComponents()
+  const [headerTransform, toggleBarsVisible] = useAnimatedComponents()
 
   useEffect(() => {
     if (onImageIndexChange) {
@@ -82,14 +74,16 @@ function ImageViewing ({
 
   return (
     <View style={[styles.container, { opacity, backgroundColor }]}>
-      <Animated.View style={[styles.header, { transform: headerTransform }]}>
-        {typeof HeaderComponent !== 'undefined' ? (
-          React.createElement(HeaderComponent, {
-            imageIndex: currentImageIndex
-          })
-        ) : (
-          <ImageDefaultHeader onRequestClose={onRequestCloseEnhanced} />
-        )}
+      <Animated.View
+        style={[
+          styles.header,
+          // @ts-ignore
+          { transform: headerTransform }
+        ]}
+      >
+        {React.createElement(HeaderComponent, {
+          imageIndex: currentImageIndex
+        })}
       </Animated.View>
       <VirtualizedList
         ref={imageList}
@@ -122,15 +116,8 @@ function ImageViewing ({
         )}
         onMomentumScrollEnd={onScroll}
         //@ts-ignore
-        keyExtractor={imageSrc => imageSrc.uri || `${imageSrc}`}
+        keyExtractor={imageSrc => imageSrc.url}
       />
-      {typeof FooterComponent !== 'undefined' && (
-        <Animated.View style={[styles.footer, { transform: footerTransform }]}>
-          {React.createElement(FooterComponent, {
-            imageIndex: currentImageIndex
-          })}
-        </Animated.View>
-      )}
     </View>
   )
 }
@@ -145,12 +132,6 @@ const styles = StyleSheet.create({
     width: '100%',
     zIndex: 1,
     top: 0
-  },
-  footer: {
-    position: 'absolute',
-    width: '100%',
-    zIndex: 1,
-    bottom: 0
   }
 })
 

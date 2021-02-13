@@ -8,7 +8,7 @@
 
 import React from "react";
 import { GestureResponderEvent } from "react-native";
-import { ImageSource } from "../../@types";
+import { ImageSource } from "../@types";
 
 declare type Props = {
   imageSrc: ImageSource;

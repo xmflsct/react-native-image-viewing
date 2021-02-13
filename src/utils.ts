@@ -16,39 +16,6 @@ import {
 } from "react-native";
 import { Dimensions, Position } from "./@types";
 
-type CacheStorageItem = { key: string; value: any };
-
-export const createCache = (cacheSize: number) => ({
-  _storage: [] as CacheStorageItem[],
-  get(key: string): any {
-    const { value } =
-      this._storage.find(({ key: storageKey }) => storageKey === key) || {};
-
-    return value;
-  },
-  set(key: string, value: any) {
-    if (this._storage.length >= cacheSize) {
-      this._storage.shift();
-    }
-
-    this._storage.push({ key, value });
-  },
-});
-
-export const splitArrayIntoBatches = (arr: any[], batchSize: number): any[] =>
-  arr.reduce((result, item) => {
-    const batch = result.pop() || [];
-
-    if (batch.length < batchSize) {
-      batch.push(item);
-      result.push(batch);
-    } else {
-      result.push(batch, [item]);
-    }
-
-    return result;
-  }, []);
-
 export const getImageTransform = (
   image: Dimensions | null,
   screen: Dimensions
