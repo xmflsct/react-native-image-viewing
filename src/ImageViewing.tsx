@@ -95,7 +95,9 @@ function ImageViewing ({
         maxToRenderPerBatch={1}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        initialScrollIndex={imageIndex}
+        initialScrollIndex={
+          imageIndex > images.length - 1 ? images.length - 1 : imageIndex
+        }
         getItem={(_, index) => images[index]}
         getItemCount={() => images.length}
         getItemLayout={(_, index) => ({

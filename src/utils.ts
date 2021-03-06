@@ -12,25 +12,25 @@ import {
   PanResponder,
   PanResponderGestureState,
   PanResponderInstance,
-  NativeTouchEvent,
-} from "react-native";
-import { Dimensions, Position } from "./@types";
+  NativeTouchEvent
+} from 'react-native'
+import { Dimensions, Position } from './@types'
 
 export const getImageTransform = (
   image: Dimensions | null,
   screen: Dimensions
 ) => {
   if (!image?.width || !image?.height) {
-    return [] as const;
+    return [] as const
   }
 
-  const wScale = screen.width / image.width;
-  const hScale = screen.height / image.height;
-  const scale = Math.min(wScale, hScale);
-  const { x, y } = getImageTranslate(image, screen);
+  const wScale = screen.width / image.width
+  const hScale = screen.height / image.height
+  const scale = Math.min(wScale, hScale)
+  const { x, y } = getImageTranslate(image, screen)
 
-  return [{ x, y }, scale] as const;
-};
+  return [{ x, y }, scale] as const
+}
 
 export const getImageStyles = (
   image: Dimensions | null,
@@ -38,46 +38,46 @@ export const getImageStyles = (
   scale?: Animated.Value
 ) => {
   if (!image?.width || !image?.height) {
-    return { width: 0, height: 0 };
+    return { width: 0, height: 0 }
   }
 
-  const transform = translate.getTranslateTransform();
+  const transform = translate.getTranslateTransform()
 
   if (scale) {
-    transform.push({ scale }, { perspective: new Animated.Value(1000) });
+    transform.push({ scale }, { perspective: new Animated.Value(1000) })
   }
 
   return {
     width: image.width,
     height: image.height,
-    transform,
-  };
-};
+    transform
+  }
+}
 
 export const getImageTranslate = (
   image: Dimensions,
   screen: Dimensions
 ): Position => {
-  const getTranslateForAxis = (axis: "x" | "y"): number => {
-    const imageSize = axis === "x" ? image.width : image.height;
-    const screenSize = axis === "x" ? screen.width : screen.height;
+  const getTranslateForAxis = (axis: 'x' | 'y'): number => {
+    const imageSize = axis === 'x' ? image.width : image.height
+    const screenSize = axis === 'x' ? screen.width : screen.height
 
-    return (screenSize - imageSize) / 2;
-  };
+    return (screenSize - imageSize) / 2
+  }
 
   return {
-    x: getTranslateForAxis("x"),
-    y: getTranslateForAxis("y"),
-  };
-};
+    x: getTranslateForAxis('x'),
+    y: getTranslateForAxis('y')
+  }
+}
 
 export const getImageDimensionsByTranslate = (
   translate: Position,
   screen: Dimensions
 ): Dimensions => ({
   width: screen.width - translate.x * 2,
-  height: screen.height - translate.y * 2,
-});
+  height: screen.height - translate.y * 2
+})
 
 export const getImageTranslateForScale = (
   currentTranslate: Position,
@@ -87,35 +87,35 @@ export const getImageTranslateForScale = (
   const { width, height } = getImageDimensionsByTranslate(
     currentTranslate,
     screen
-  );
+  )
 
   const targetImageDimensions = {
     width: width * targetScale,
-    height: height * targetScale,
-  };
+    height: height * targetScale
+  }
 
-  return getImageTranslate(targetImageDimensions, screen);
-};
+  return getImageTranslate(targetImageDimensions, screen)
+}
 
 type HandlerType = (
   event: GestureResponderEvent,
   state: PanResponderGestureState
-) => void;
+) => void
 
 type PanResponderProps = {
-  onGrant: HandlerType;
-  onStart?: HandlerType;
-  onMove: HandlerType;
-  onRelease?: HandlerType;
-  onTerminate?: HandlerType;
-};
+  onGrant: HandlerType
+  onStart?: HandlerType
+  onMove: HandlerType
+  onRelease?: HandlerType
+  onTerminate?: HandlerType
+}
 
 export const createPanResponder = ({
   onGrant,
   onStart,
   onMove,
   onRelease,
-  onTerminate,
+  onTerminate
 }: PanResponderProps): PanResponderInstance =>
   PanResponder.create({
     onStartShouldSetPanResponder: () => true,
@@ -128,19 +128,19 @@ export const createPanResponder = ({
     onPanResponderRelease: onRelease,
     onPanResponderTerminate: onTerminate,
     onPanResponderTerminationRequest: () => false,
-    onShouldBlockNativeResponder: () => false,
-  });
+    onShouldBlockNativeResponder: () => false
+  })
 
 export const getDistanceBetweenTouches = (
   touches: NativeTouchEvent[]
 ): number => {
-  const [a, b] = touches;
+  const [a, b] = touches
 
   if (a == null || b == null) {
-    return 0;
+    return 0
   }
 
   return Math.sqrt(
     Math.pow(a.pageX - b.pageX, 2) + Math.pow(a.pageY - b.pageY, 2)
-  );
-};
+  )
+}

@@ -110,15 +110,15 @@ const usePanResponder = ({
   const fitsScreenByHeight = () =>
     imageDimensions.height * currentScale < SCREEN_HEIGHT;
 
-  // useEffect(() => {
-  //   scaleValue.addListener(({ value }) => {
-  //     if (typeof onZoom === "function") {
-  //       onZoom(value !== initialScale);
-  //     }
-  //   });
+  useEffect(() => {
+    scaleValue.addListener(({ value }) => {
+      if (typeof onZoom === "function") {
+        onZoom(value !== initialScale);
+      }
+    });
 
-  //   return () => scaleValue.removeAllListeners();
-  // });
+    return () => scaleValue.removeAllListeners();
+  });
 
   const cancelLongPressHandle = () => {
     longPressHandlerRef && clearTimeout(longPressHandlerRef);
