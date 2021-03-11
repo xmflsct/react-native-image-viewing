@@ -128,6 +128,7 @@ const ImageItem = ({
       })}
     >
       <Animated.View
+        {...panHandlers}
         // @ts-ignore
         style={imageStylesWithOpacity}
         children={

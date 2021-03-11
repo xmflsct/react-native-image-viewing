@@ -29,7 +29,7 @@ const SCREEN_WIDTH = SCREEN.width;
 const SCREEN_HEIGHT = SCREEN.height;
 const MIN_DIMENSION = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-const SCALE_MAX = 2;
+const SCALE_MAX = 1;
 const DOUBLE_TAP_DELAY = 300;
 const OUT_BOUND_MULTIPLIER = 0.75;
 
